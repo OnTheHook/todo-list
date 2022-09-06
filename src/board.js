@@ -4,6 +4,7 @@ const boardFactory = (boardName) => {
         list.push(toDo)
     }
     const deleteToDo = (toDo) => {
+        console.log(toDo.title)
         list.splice(list.indexOf(toDo), 1)
     }
     const printList = () => {
