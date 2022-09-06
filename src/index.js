@@ -6,6 +6,8 @@ let tasks = boardFactory('Task')
 let current = tasks
 lists.push(tasks)
 
+const tasksDiv = document.getElementById('tasks')
+
 const title = document.getElementById('title')
 const description = document.getElementById('description')
 const date = document.getElementById('date')
@@ -19,6 +21,24 @@ const newListName = document.getElementById('list-name')
 const newListButton = document.getElementById('create-list')
 
 const projectDiv = document.getElementById('projects')
+
+const addItem = document.getElementById('add-item')
+
+const formContainer = document.getElementById('form')
+const form = document.getElementById('new-task')
+
+const newProject = document.getElementById('new-project')
+
+const newListFormContainer = document.getElementById('new-list')
+const newListForm = document.createElement('new-list-form')
+
+addItem.addEventListener('click', (e) => {
+    formContainer.classList.remove('invisible')
+})
+
+newProject.addEventListener('click', (e) => {
+    newListFormContainer.classList.remove('invisible')
+})
 
 function populateList(arg) {
     while (listDiv.firstChild) {
@@ -43,6 +63,11 @@ function populateList(arg) {
     });
 }
 
+tasksDiv.addEventListener('click', (e) => {
+    populateList(tasks)
+    current = tasks
+})
+
 newListButton.addEventListener('click', (e) => {
     e.preventDefault()
     let name = newListName.value
@@ -50,12 +75,28 @@ newListButton.addEventListener('click', (e) => {
     lists.push(newList)
     let newListDiv = document.createElement('div')
     newListDiv.textContent = name
+
+    let deleteListButton = document.createElement('button')
+    deleteListButton.textContent = 'DEL'
+    newListDiv.appendChild(deleteListButton)    
+
     projectDiv.appendChild(newListDiv)
+
+    deleteListButton.addEventListener('click', (e) => {
+        e.preventDefault()
+        populateList(tasks)
+        current = tasks
+        console.log(lists)
+        lists.splice(lists.indexOf(newList), 1)
+        deleteListButton.parentElement.remove()        
+    })
 
     newListDiv.addEventListener('click', (e) => {
         populateList(newList)
         current = newList
     })
+
+    newListFormContainer.classList.add('invisible')
 })
 
 submit.addEventListener('click', (e) => {
@@ -83,6 +124,8 @@ submit.addEventListener('click', (e) => {
     })
 
     listDiv.appendChild(newDiv)
+    formContainer.classList.add('invisible')
+    // form.reset()
 
 })
 
