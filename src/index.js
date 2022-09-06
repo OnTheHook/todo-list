@@ -20,6 +20,29 @@ const newListButton = document.getElementById('create-list')
 
 const projectDiv = document.getElementById('projects')
 
+function populateList(arg) {
+    while (listDiv.firstChild) {
+        listDiv.removeChild(listDiv.lastChild);
+    }
+    arg.list.forEach(element => {
+        let newDiv = document.createElement('div')
+        newDiv.textContent = element.title
+        let button = document.createElement('button')
+        button.textContent = 'Delete'
+
+        newDiv.appendChild(button)
+
+
+        button.addEventListener('click', (e) => {
+            e.preventDefault()
+            arg.deleteToDo(element)
+            button.parentElement.remove()
+        })
+
+        listDiv.appendChild(newDiv)
+    });
+}
+
 newListButton.addEventListener('click', (e) => {
     e.preventDefault()
     let name = newListName.value
@@ -28,14 +51,10 @@ newListButton.addEventListener('click', (e) => {
     let newListDiv = document.createElement('div')
     newListDiv.textContent = name
     projectDiv.appendChild(newListDiv)
-    
-    newListDiv.addEventListener('click', (e) => {
-        while(listDiv.firstChild) {
-            listDiv.removeChild(listDiv.lastChild);
-        }
-        current = newList
-        console.log(lists)
 
+    newListDiv.addEventListener('click', (e) => {
+        populateList(newList)
+        current = newList
     })
 })
 

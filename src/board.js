@@ -5,7 +5,9 @@ const boardFactory = (boardName) => {
     }
     const deleteToDo = (toDo) => {
         console.log(toDo.title)
+        console.table(list)
         list.splice(list.indexOf(toDo), 1)
+        console.table(list)
     }
     const printList = () => {
         for(let i in list) {
