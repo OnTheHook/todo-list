@@ -5,12 +5,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../src/style.css">
     <title>ToDo List</title>
 </head>
 
 <body>
     <div class="content">
-        <div id="form">
+        <div class="header">
+            <div class="logo">ToDo List</div>
+            <div id="add-item">+</div>
+        </div>
+        <div id="projects">
+            <div id="tasks">Tasks</div>
+            <h2>Projects</h2>
+            <div id="new-project">+ Add New Project</div>            
+        </div>
+        <div class="list">
+        </div>
+        <div id="form" class="invisible">
             <form action="#" method="get" id="new-task">
                 <p>
                     <label for="task">Task:</label>
@@ -31,8 +43,8 @@
                 <p><button id="submit">Submit</button></p>
             </form>
         </div>
-        <div id="new-list-form">
-            <form action="#" method="get" id="new-task">
+        <div id="new-list" class="invisible">
+            <form action="#" method="get" id="new-list-form">
                 <p>
                     <label for="list-name">List Name:</label>
                     <input type="text" id="list-name" name="list-name" maxlength="20">
@@ -40,11 +52,8 @@
                 <p><button id="create-list">New List</button></p>
             </form>
         </div>
-        <div class="list">
-        </div>
-        <div id="projects">
-            <h2>Projects</h2>
-        </div>
+        
+        
     </div>
     <script src="main.js"></script>
 </body>
