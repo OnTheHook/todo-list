@@ -21,6 +21,7 @@
             <div id="new-project">+ Add New Project</div>            
         </div>
         <div class="list">
+            <h2>Tasks</h2>
         </div>
         <div id="form" class="invisible">
             <form action="#" method="get" id="new-task">
@@ -38,7 +39,7 @@
                 </p>
                 <p>
                     <label for="priority">Priority (1 is high and 3 is low)</label>
-                    <input type="number" name="priority" id="priority">
+                    <input type="number" name="priority" id="priority" min="1" max="3">
                 </p>
                 <p><button id="submit">Submit</button></p>
             </form>
@@ -52,7 +53,12 @@
                 <p><button id="create-list">New List</button></p>
             </form>
         </div>
-        
+        <div class="bg-description">
+            <div class="close">+</div>
+            <div class="description-contents">
+                
+            </div>
+        </div>
         
     </div>
     <script src="main.js"></script>
