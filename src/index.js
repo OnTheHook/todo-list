@@ -75,8 +75,77 @@ function showDetails(element) {
     descriptionDiv.appendChild(detailsDiv)
 }
 
+//function to create to do item div
+function createToDoDiv(element, list) {
+    let newDiv = document.createElement('div')
+    newDiv.textContent = element.title
+    newDiv.classList.add('card')
+    let completeDiv = document.createElement('div')
+    let priorityImg = new Image()
+    if (element.priority === '1') {
+        priorityImg.src = priorityOne
+    } else if (element.priority === '2') {
+        priorityImg.src = priorityTwo
+    } else {
+        priorityImg.src = priorityThree
+    }
+
+    let detailsButton = document.createElement('button')
+    detailsButton.textContent = 'Details'
+    let button = document.createElement('button')
+    button.textContent = 'Delete'
+    newDiv.appendChild(completeDiv)
+    newDiv.appendChild(priorityImg)
+    newDiv.appendChild(detailsButton)
+    newDiv.appendChild(button)
+
+
+    if (element.done) {
+        completeDiv.textContent = 'Complete';
+        completeDiv.classList.add('complete')
+        completeDiv.parentElement.classList.add('done')
+
+    } else {
+        completeDiv.classList.add('not-yet')
+        completeDiv.textContent = 'Not Yet'
+    }
+
+
+    completeDiv.addEventListener('click', () => {
+        if (element.done === false) {
+            element.done = true
+            completeDiv.classList.add('complete');
+            completeDiv.classList.remove('not-yet');
+            completeDiv.textContent = 'Complete';
+            completeDiv.parentElement.classList.add('done')
+        } else {
+            element.done = false
+            completeDiv.classList.add('not-yet');
+            completeDiv.classList.remove('complete');
+            completeDiv.textContent = 'Not Yet';
+            completeDiv.parentElement.classList.remove('done')
+        }
+    })
+
+    detailsButton.addEventListener('click', (e) => {
+        e.preventDefault()
+        showDetails(element)
+        descriptionBG.style.display = 'flex'
+    })
+
+    button.addEventListener('click', (e) => {
+        e.preventDefault()
+        list.deleteToDo(element)
+        button.parentElement.remove()
+    })
+
+    return newDiv
+
+}
+
 //function to display todo items in a list format
 function populateList(arg) {
+    //deletes all the current children in the div containing the list
     while (listDiv.firstChild) {
         listDiv.removeChild(listDiv.lastChild);
     }
@@ -84,76 +153,19 @@ function populateList(arg) {
     let listTitle = document.createElement('h2')
     listTitle.textContent = arg.boardName
     listDiv.appendChild(listTitle)
-    arg.list.forEach(element => {
-        let newDiv = document.createElement('div')
-        newDiv.textContent = element.title
-        newDiv.classList.add('card')
-        let completeDiv = document.createElement('div')
-        let priorityImg = new Image()
-        if (element.priority === '1') {
-            priorityImg.src = priorityOne
-        } else if (element.priority === '2') {
-            priorityImg.src = priorityTwo
-        } else {
-            priorityImg.src = priorityThree
-        }
-
-        let detailsButton = document.createElement('button')
-        detailsButton.textContent = 'Details'
-        let button = document.createElement('button')
-        button.textContent = 'Delete'
-        newDiv.appendChild(completeDiv)
-        newDiv.appendChild (priorityImg)
-        newDiv.appendChild(detailsButton)
-        newDiv.appendChild(button)
-        
-
-        if (element.done) {
-            completeDiv.textContent = 'Complete';
-            completeDiv.classList.add('complete')
-            completeDiv.parentElement.classList.add('done')
-
-        } else {
-            completeDiv.classList.add('not-yet')
-            completeDiv.textContent = 'Not Yet'
-        }
-
-
-        completeDiv.addEventListener('click', () => {
-            if (element.done === false) {
-                element.done = true
-                completeDiv.classList.add('complete');
-                completeDiv.classList.remove('not-yet');
-                completeDiv.textContent = 'Complete';
-                completeDiv.parentElement.classList.add('done')
-            } else {
-                element.done = false
-                completeDiv.classList.add('not-yet');
-                completeDiv.classList.remove('complete');
-                completeDiv.textContent = 'Not Yet';
-                completeDiv.parentElement.classList.remove('done')
-            }
-        })
-
-        detailsButton.addEventListener('click', (e) =>{
-            e.preventDefault()
-            showDetails(element)
-            descriptionBG.style.display = 'flex'
-        })
-
-        button.addEventListener('click', (e) => {
-            e.preventDefault()
-            arg.deleteToDo(element)
-            button.parentElement.remove()
-        })
-
-        listDiv.appendChild(newDiv)
+    arg.list.forEach(ele => {
+        listDiv.appendChild(createToDoDiv(ele, arg))
     });
 }
 
 tasksDiv.addEventListener('click', (e) => {
     populateList(tasks)
     current = tasks
+    let children = projectDiv.children
+    Array.from(children).forEach(child => {
+        child.classList.remove('current')
+    })
+    tasksDiv.classList.add('current')
 })
 
 newListButton.addEventListener('click', (e) => {
@@ -165,7 +177,7 @@ newListButton.addEventListener('click', (e) => {
     newListDiv.textContent = name
 
     let deleteListButton = document.createElement('button')
-    deleteListButton.textContent = 'DEL'
+    deleteListButton.textContent = 'Delete'
     newListDiv.appendChild(deleteListButton)
 
     projectDiv.appendChild(newListDiv)
@@ -182,6 +194,11 @@ newListButton.addEventListener('click', (e) => {
     newListDiv.addEventListener('click', (e) => {
         populateList(newList)
         current = newList
+        let children = projectDiv.children
+        Array.from(children).forEach(child => {
+            child.classList.remove('current')
+        })
+        newListDiv.classList.add('current')
     })
 
     newListFormContainer.classList.add('invisible')
@@ -197,51 +214,7 @@ submit.addEventListener('click', (e) => {
     let task = toDoFactory(taskTitle, taskDescription, taskDate, taskPriority, false)
     current.addToDo(task)
 
-    let newDiv = document.createElement('div')
-    newDiv.textContent = task.title
-    newDiv.classList.add('card')
-    let completeDiv = document.createElement('div')
-    completeDiv.textContent = 'Not Yet'
-    completeDiv.classList.add('not-yet')
-    let button = document.createElement('button')
-    button.textContent = 'Delete'
-
-    let priorityImg = new Image()
-    if (task.priority === '1') {
-        priorityImg.src = priorityOne
-    } else if (task.priority === '2') {
-        priorityImg.src = priorityTwo
-    } else {
-        priorityImg.src = priorityThree
-    }
-
-    newDiv.appendChild(completeDiv)
-    newDiv.appendChild(priorityImg)
-    newDiv.appendChild(button)
-
-    completeDiv.addEventListener('click', () => {
-        if (task.done === false) {
-            task.done = true
-            completeDiv.classList.add('complete');
-            completeDiv.classList.remove('not-yet');
-            completeDiv.textContent = 'Complete';
-            completeDiv.parentElement.classList.add('done')
-        } else {
-            task.done = false
-            completeDiv.classList.add('not-yet');
-            completeDiv.classList.remove('complete');
-            completeDiv.textContent = 'Not Yet';
-            completeDiv.parentElement.classList.remove('done')
-        }
-    })
-
-    button.addEventListener('click', (e) => {
-        e.preventDefault()
-        tasks.deleteToDo(task)
-        button.parentElement.remove()
-    })
-
-    listDiv.appendChild(newDiv)
+    listDiv.appendChild(createToDoDiv(task))
     formContainer.classList.add('invisible')
     // form.reset()
 
