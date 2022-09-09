@@ -1,13 +1,15 @@
 import boardFactory from './board.js';
 import toDoFactory from './todo.js';
+import { storageAvailable, storeInfo, accessInfo } from './storage.js';
 import priorityOne from './red_priority.svg';
 import priorityTwo from './orange_priority.svg';
 import priorityThree from './yellow_priority.svg'
 
 let lists = []
 let tasks = boardFactory('Tasks')
-let current = tasks
 lists.push(tasks)
+
+
 
 const tasksDiv = document.getElementById('tasks')
 
@@ -39,6 +41,15 @@ const descriptionBG = document.querySelector('.bg-description')
 const descriptionDiv = document.querySelector('.description-contents')
 const closeDiv = document.querySelector('.close')
 
+if(localStorage) {
+    lists = accessInfo()
+    tasks = accessInfo()[0]
+    populateList(tasks)
+    populateProjects(tasks)
+}
+
+let current = tasks
+
 addItem.addEventListener('click', (e) => {
     formContainer.classList.remove('invisible')
 })
@@ -50,6 +61,45 @@ newProject.addEventListener('click', (e) => {
 closeDiv.addEventListener('click', () => {
     descriptionBG.style.display = 'none'
 })
+
+function populateProjects(args) {
+
+    // let name = newListName.value
+    // let newList = boardFactory(name)
+    // lists.push(newList)
+    // let newListDiv = document.createElement('div')
+    // newListDiv.textContent = name
+
+    // let deleteListButton = document.createElement('button')
+    // deleteListButton.textContent = 'Delete'
+    // newListDiv.appendChild(deleteListButton)
+
+    // projectDiv.appendChild(newListDiv)
+
+    // deleteListButton.addEventListener('click', (e) => {
+    //     e.preventDefault()
+    //     e.stopPropagation()
+    //     populateList(tasks)
+    //     current = tasks
+    //     lists.splice(lists.indexOf(newList), 1)
+    //     deleteListButton.parentElement.remove()
+    // })
+
+    // newListDiv.addEventListener('click', (e) => {
+    //     populateList(newList)
+    //     current = newList
+    //     let children = projectDiv.children
+    //     Array.from(children).forEach(child => {
+    //         child.classList.remove('current')
+    //     })
+    //     newListDiv.classList.add('current')
+    // })
+    // localStorage.clear()
+    // storeInfo(lists)
+    // console.log(localStorage)
+    // newListFormContainer.classList.add('invisible')
+
+}
 
 //function to display details of todo item
 function showDetails(element) {
@@ -200,7 +250,9 @@ newListButton.addEventListener('click', (e) => {
         })
         newListDiv.classList.add('current')
     })
-
+    localStorage.clear()
+    storeInfo(lists)
+    console.log(localStorage)
     newListFormContainer.classList.add('invisible')
 })
 
