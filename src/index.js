@@ -41,11 +41,24 @@ const descriptionBG = document.querySelector('.bg-description')
 const descriptionDiv = document.querySelector('.description-contents')
 const closeDiv = document.querySelector('.close')
 
-if(localStorage) {
-    lists = accessInfo()
-    tasks = accessInfo()[0]
+if (localStorage.length !== 0) {
+    lists = []
+    let accessList = JSON.parse(localStorage.getItem('list'))
+    let accessObj = JSON.parse(localStorage.getItem('lengths'))
+
+    for (let i in accessList) {
+        let listLength = accessObj[accessList[i]]
+        let finalList = boardFactory(accessList[i])
+        for (let p = 0; p < listLength; p++) {
+            let obj = JSON.parse(localStorage.getItem(accessList[i] + p))
+            let task = toDoFactory(obj.title, obj.description, obj.dueDate, obj.priority, obj.done)
+            finalList.addToDo(task)
+        }
+        lists.push(finalList)
+    }
+    tasks = lists[0]
     populateList(tasks)
-    populateProjects(tasks)
+    populateProjects(lists)
 }
 
 let current = tasks
@@ -62,42 +75,50 @@ closeDiv.addEventListener('click', () => {
     descriptionBG.style.display = 'none'
 })
 
+function updateLocalStorage() {
+    localStorage.clear()
+    storeInfo(lists)
+}
+
+//function to populate Projects Div
 function populateProjects(args) {
+    for (let i = 1; i < args.length; i++) {
+        let name = args[i].boardName
+        let newListDiv = document.createElement('div')
+        newListDiv.textContent = name
 
-    // let name = newListName.value
-    // let newList = boardFactory(name)
-    // lists.push(newList)
-    // let newListDiv = document.createElement('div')
-    // newListDiv.textContent = name
+        let deleteListButton = document.createElement('button')
+        deleteListButton.textContent = 'Delete'
+        newListDiv.appendChild(deleteListButton)
+        newListDiv.classList.add('project-title')
 
-    // let deleteListButton = document.createElement('button')
-    // deleteListButton.textContent = 'Delete'
-    // newListDiv.appendChild(deleteListButton)
+        projectDiv.appendChild(newListDiv)
 
-    // projectDiv.appendChild(newListDiv)
+        deleteListButton.addEventListener('click', (e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            populateList(tasks)
+            let children = projectDiv.children
+            Array.from(children).forEach(child => {
+                child.classList.remove('current')
+            })
+            tasksDiv.classList.add('current')
+            current = tasks
+            lists.splice(lists.indexOf(args[i]), 1)
+            updateLocalStorage()
+            deleteListButton.parentElement.remove()
+        })
 
-    // deleteListButton.addEventListener('click', (e) => {
-    //     e.preventDefault()
-    //     e.stopPropagation()
-    //     populateList(tasks)
-    //     current = tasks
-    //     lists.splice(lists.indexOf(newList), 1)
-    //     deleteListButton.parentElement.remove()
-    // })
-
-    // newListDiv.addEventListener('click', (e) => {
-    //     populateList(newList)
-    //     current = newList
-    //     let children = projectDiv.children
-    //     Array.from(children).forEach(child => {
-    //         child.classList.remove('current')
-    //     })
-    //     newListDiv.classList.add('current')
-    // })
-    // localStorage.clear()
-    // storeInfo(lists)
-    // console.log(localStorage)
-    // newListFormContainer.classList.add('invisible')
+        newListDiv.addEventListener('click', (e) => {
+            populateList(args[i])
+            current = args[i]
+            let children = projectDiv.children
+            Array.from(children).forEach(child => {
+                child.classList.remove('current')
+            })
+            newListDiv.classList.add('current')
+        })
+    }
 
 }
 
@@ -175,6 +196,7 @@ function createToDoDiv(element, list) {
             completeDiv.textContent = 'Not Yet';
             completeDiv.parentElement.classList.remove('done')
         }
+        updateLocalStorage()
     })
 
     detailsButton.addEventListener('click', (e) => {
@@ -186,6 +208,7 @@ function createToDoDiv(element, list) {
     button.addEventListener('click', (e) => {
         e.preventDefault()
         list.deleteToDo(element)
+        updateLocalStorage()
         button.parentElement.remove()
     })
 
@@ -229,6 +252,7 @@ newListButton.addEventListener('click', (e) => {
     let deleteListButton = document.createElement('button')
     deleteListButton.textContent = 'Delete'
     newListDiv.appendChild(deleteListButton)
+    newListDiv.classList.add('project-title')
 
     projectDiv.appendChild(newListDiv)
 
@@ -237,7 +261,13 @@ newListButton.addEventListener('click', (e) => {
         e.stopPropagation()
         populateList(tasks)
         current = tasks
+        let children = projectDiv.children
+        Array.from(children).forEach(child => {
+            child.classList.remove('current')
+        })
+        tasksDiv.classList.add('current')
         lists.splice(lists.indexOf(newList), 1)
+        updateLocalStorage()
         deleteListButton.parentElement.remove()
     })
 
@@ -250,8 +280,7 @@ newListButton.addEventListener('click', (e) => {
         })
         newListDiv.classList.add('current')
     })
-    localStorage.clear()
-    storeInfo(lists)
+    updateLocalStorage()
     console.log(localStorage)
     newListFormContainer.classList.add('invisible')
 })
@@ -270,5 +299,6 @@ submit.addEventListener('click', (e) => {
     formContainer.classList.add('invisible')
     // form.reset()
 
+    updateLocalStorage()
 })
 

@@ -1,5 +1,5 @@
 const boardFactory = (boardName) => {
-    const list = []
+    let list = []
     const addToDo = (toDo) => {
         list.push(toDo)
     }

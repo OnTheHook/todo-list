@@ -62,6 +62,18 @@ img {
     font-size: 24px;
     font-weight: bold;
     padding: 5px 10px;
+    cursor: pointer;
+}
+
+#add-item:hover {
+    color: #195ABE;
+    background-color: #FFFFFF;
+}
+
+#new-project {
+    font-weight: bold;
+    cursor: pointer;
+    color: #195ABE;
 }
 
 #form {
@@ -94,6 +106,20 @@ img {
 
 #new-list.invisible {
     display: none;
+}
+
+.project-title {
+    display: flex;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.project-title:hover {
+    background-color: #f3f2f1;
+}
+
+.current:hover {
+    background-color: #ecf6fd;
 }
 
 .card {
