@@ -1,3 +1,4 @@
+import "./style.css";
 import boardFactory from './board.js';
 import toDoFactory from './todo.js';
 import { storageAvailable, storeInfo, accessInfo } from './storage.js';
